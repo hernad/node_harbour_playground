@@ -11,10 +11,30 @@
 #include "hbvm.h"
 #include "hbstack.h"
 
+#include "hbvmpub.h"
+#include "hbinit.h"
+
+extern HB_FUNC(ECHO_JSON_0);
+extern HB_FUNC(ECHO_JSON);
+
 HB_EXTERN_BEGIN
 extern  char * s_defaultGT;
 extern  char * s_pszLinkedMain;
 HB_EXTERN_END
+
+HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_NODE_1 )
+{ "ECHO_JSON_0", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( ECHO_JSON_0 )}, NULL },
+{ "ECHO_JSON", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( ECHO_JSON )}, NULL }
+HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_NODE_1, "node_1.prg", 0x0, 0x0003 )
+
+#if defined( HB_PRAGMA_STARTUP )
+   #pragma startup hb_vm_SymbolInit_NODE_1
+#elif defined( HB_DATASEG_STARTUP )
+   #define HB_DATASEG_BODY    HB_DATASEG_FUNC( hb_vm_SymbolInit_NODE_1 )
+   #include "hbiniseg.h"
+#endif
+
+
 
 
 /*
@@ -29,33 +49,13 @@ HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )
 HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )
 */
 
+
 using namespace v8;
 
 Handle<Value> Method(const Arguments& args) {
   HandleScope scope;
   return scope.Close(String::New("world"));
 }
-
-/*
-HB_FUNC( HB_ZEBRA_CREATE_ITF )
-{
-   PHB_ITEM pItem = hb_param( 1, HB_IT_STRING );
-  // if( pItem )
-  // {
-  //    hb_zebra_ret( hb_zebra_create_itf( hb_itemGetCPtr( pItem ), hb_itemGetCLen( pItem ), hb_parni( 2 ) ) );
-  // }
-  // else
-  //   hb_errRT_BASE( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-}
-
-*/
-
-/* NOTE: DO() as a function is a Harbour extension. [vszakats] */
-
-/* NOTE: use hb_stackItemFromBase( uiParam ) instead of
- *       hb_param( uiParam, HB_IT_ANY ) to keep references to
- *       parameters passed by refeence. [druzus]
- */
 
 Handle<Value> Method2(const Arguments& args)
 {
@@ -64,62 +64,27 @@ Handle<Value> Method2(const Arguments& args)
    //HB_FUNC_EXEC(HB_GT_CRS);
    hb_vmInit(0);
 
-   PHB_ITEM p1 = hb_itemPutND(NULL, 22);
-   hb_itemDoC( "QOUT", 2, p1, p1, 0);
-   /*
-   HB_USHORT uiPCount = ( HB_USHORT ) hb_pcount();
-   PHB_ITEM pSelf = NULL;
+   //PHB_ITEM p1 = hb_itemPutND(NULL, 22);
+   PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "[a:1]");
+   hb_itemDoC( "QOUT", 1, p1, 0);
+   //PHB_ITEM pRez = hb_itemDoC( "echo_json_0", 0, 0);
+   //PHB_ITEM pRez = hb_itemDoC( "echo_json_0", 0);
+   PHB_ITEM pRez = hb_itemDoC( "echo_json", 1, p1, 0);
 
-   if( uiPCount > 0 )
-   {
-      PHB_ITEM pItem = hb_param( 1, HB_IT_ANY );
+   const char * ret;
 
-      if( HB_IS_STRING( pItem ) )
-      {
-         //PHB_DYNS pDynSym = hb_dynsymFindName( hb_itemGetCPtr( pItem ) );
-         PHB_DYNS pDynSym = hb_dynsymFindName( "QOUT" );
+   if HB_IS_STRING(pRez) {
+       ret = hb_itemGetCPtr(pRez);
+       printf("rezultat koji je hello.cc primio je %s\n", ret);
+       String str = String::New(ret);
 
-         if( !pDynSym )
-         {
-            hb_errRT_BASE( EG_NOFUNC, 1001, NULL, hb_itemGetCPtr( pItem ), HB_ERR_ARGS_BASEPARAMS );
-            return scope.Close(String::New("world2 error"));
-         }
-         hb_vmPushDynSym( pDynSym );
-      }
-      else if( HB_IS_BLOCK( pItem ) )
-      {
-         hb_vmPushEvalSym();
-         pSelf = pItem;
-      }
-      else if( HB_IS_SYMBOL( pItem ) )
-         hb_vmPush( pItem );
-      else
-         uiPCount = 0;
+       // dealociraj harbour resurse
+       hb_itemRelease(pRez);
+       hb_itemRelease(p1);
+       return scope.Close(str);
+   } else {
+       return scope.Close(String::New("nepoznat hb ret ?!"));
    }
-
-   if( uiPCount > 0 )
-   {
-      HB_USHORT uiParam;
-
-      if( pSelf )
-         hb_vmPush( pSelf );
-      else
-         hb_vmPushNil();
-
-      for( uiParam = 2; uiParam <= uiPCount; ++uiParam )
-         hb_vmPush( hb_stackItemFromBase( uiParam ) );
-
-      if( pSelf )
-         hb_vmSend( ( HB_USHORT ) ( uiPCount - 1 ) );
-      else
-         hb_vmProc( ( HB_USHORT ) ( uiPCount - 1 ) );
-   }
-   else
-      hb_errRT_BASE_SubstR( EG_ARG, 3012, NULL, HB_ERR_FUNCNAME, HB_ERR_ARGS_BASEPARAMS );
-
-  */
-   
-  return scope.Close(String::New("world2"));
 
 }
 

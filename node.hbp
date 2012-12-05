@@ -1,0 +1,37 @@
+#
+# $Id: xhb.hbp 17312 2012-03-04 20:05:31Z vszakats $
+#
+
+# Until Minix gets sa_sigaction support (hbserv.c)
+-stop{minix}
+
+-hblib
+-inc
+
+-o${hb_name}
+
+-w3 -es2
+
+#-instfile=contrib:hbcompat.h
+#-instfile=contrib:xhb.h
+#-instfile=inc:hbcompat.ch
+#-instfile=inc:xhb.ch
+#-instfile=inc:xhbcls.ch
+#-instfile=inc:xhbextrn.ch
+#-instfile=inc:xhb.hbx
+
+# For hbserv.c, maybe more
+#-c=gnu90
+
+#hbct.hbc
+#hbtip.hbc
+#hbwin.hbc
+#hbfship.hbc
+#hbxpp.hbc
+
+#xhb.hbx
+
+#bkgtsks.c
+
+#arrayblk.prg
+node_1.prg

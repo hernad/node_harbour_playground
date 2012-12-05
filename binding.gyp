@@ -21,7 +21,8 @@
         ['OS!="win"', {
           'libraries': [
             '-L<(HB_Root)/lib/harbour',
-            '-lharbour'
+            '-lharbour',
+            '-lnode'
           ],
           'include_dirs': [
             '<(HB_Root)/include/harbour',
