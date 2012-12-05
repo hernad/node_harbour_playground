@@ -245,14 +245,14 @@ Handle<Value> EvalJson(const Arguments& args)
 
    hb_memvarsClear(HB_TRUE);
 
-   ++ __counter;
+   //++ __counter;
 
    //if (__counter % 10 == 0)
-      hb_gcCollectAll(HB_TRUE);
+   hb_gcCollectAll(HB_TRUE);
 
-   hb_errExit();
-   hb_conRelease();
-   hb_xexit(); 
+   //hb_errExit();
+   //hb_conRelease();
+   //hb_xexit(); 
    return scope.Close(result);
 
 

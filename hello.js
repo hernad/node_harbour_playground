@@ -18,7 +18,7 @@ setInterval(function() {
     console.log("--------------------------------------------");
     console.log("idemo put:" + i + "  / " +  counter );
 
-    console.log(addon.hello());
+    //console.log(addon.hello());
     var rezultat_string = addon.eval_json("{\"eval\": \"+\", \"args\": [1, "+ i +"] }");
     var rezultat = JSON.parse(rezultat_string);
     console.log("addon vration json string: " + rezultat_string + " evo ret vrijednosti: " + rezultat.ret);
@@ -26,7 +26,7 @@ setInterval(function() {
   }
   ++counter;
 
-  if (counter > 1000) {
+  if (counter > 300) {
       console.log("dosta vise vrcenja ...");
       process.exit(code=0);
   }

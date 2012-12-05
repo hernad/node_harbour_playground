@@ -52,12 +52,17 @@ local _op, _args
    rez: 3
 }
 */
+
+#ifdef DEBUG
 ? "----------- start harbour eval_json ---------"
 ? "json:", pp(json)
+#endif
 
 _json_len := hb_jsonDecode(json, @_var)
 
+#ifdef DEBUG
 ? "harour var:", pp(_var)
+#endif
 
 if hb_HHASKEY(_var, "eval")
   _op := _var["eval"]
@@ -86,7 +91,7 @@ endif
 if (_op == "server_info")
 
   // parametri konekcije na server
-  ? "server_info parametri", pp(_args)
+  //? "server_info parametri", pp(_args)
 
   f18_set_server_params(_args)
 
@@ -94,13 +99,17 @@ if (_op == "server_info")
   _ret := server_info()
 endif
 
-
+#ifdef DEBUG
 ? "harbour ret", pp(_ret)
-_ret := hb_jsonEncode(_ret)
+#endif
+
+#ifdef DEBUG
 ? "json encoded: valtype",  valtype(_ret),  pp(_ret)
 ? "------- harbour eval_json end ----------"
 ?
-return _ret
+#endif
+
+return hb_jsonEncode(_ret)
 
 procedure main()
 ? "dummy main"
