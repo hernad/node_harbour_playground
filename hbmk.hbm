@@ -1,0 +1,8 @@
+node.hbc
+
+#debug
+-b
+-q
+-w1
+
+#-w3 -es2

@@ -22,6 +22,7 @@
           'libraries': [
             '-L<(HB_Root)/lib/harbour',
             '-lharbour',
+            '-lhbct',
             '-lgtstd',
             '-lnode'
           ],
