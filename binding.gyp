@@ -23,7 +23,14 @@
             '-L<(HB_Root)/lib/harbour',
             '-lharbour',
             '-lhbct',
+            '-lpq',
+            '-lhbpgsql',
+            '-lhbtip',
+            '-lmysqlclient',
+            '-lminizip',
+            '-lhbmzip',
             '-lgtstd',
+            '-lhbdebug',
             '-lnode'
           ],
           'include_dirs': [

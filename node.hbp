@@ -5,6 +5,9 @@
 # Until Minix gets sa_sigaction support (hbserv.c)
 -stop{minix}
 
+-DNODE
+-workdir=.n
+
 -hblib
 -inc
 
@@ -32,6 +35,17 @@
 #bkgtsks.c
 
 #arrayblk.prg
+../F18_knowhow/fin/*.prg
+../F18_knowhow/kalk/*.prg
+../F18_knowhow/fakt/*.prg
+../F18_knowhow/os/*.prg
+../F18_knowhow/ld/*.prg
+../F18_knowhow/virm/*.prg
+../F18_knowhow/kam/*.prg
+../F18_knowhow/rnal/*.prg
+../F18_knowhow/mat/*.prg
+../F18_knowhow/epdv/*.prg
+../F18_knowhow/pos/*.prg
 ../F18_knowhow/common/*.prg
 
 dummy_node.prg

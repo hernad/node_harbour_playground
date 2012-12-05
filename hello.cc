@@ -14,6 +14,7 @@
 #include "hbvmpub.h"
 #include "hbinit.h"
 
+static int __initialized_harbour = 0;
 
 extern HB_FUNC(DELETE_REC_SERVER_AND_DBF);
 // -------------------------
@@ -190,7 +191,11 @@ Handle<Value> Method2(const Arguments& args)
    HandleScope scope;
 
    //HB_FUNC_EXEC(HB_GT_CRS);
-   hb_vmInit(0);
+   if (!__initialized_harbour) {
+      hb_vmInit(0);
+      __initialized_harbour = 1;
+   }
+
    hb_vmSetDefaultGT("STD");
 
    //PHB_ITEM p1 = hb_itemPutND(NULL, 22);
