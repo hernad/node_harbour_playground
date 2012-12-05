@@ -4,7 +4,6 @@
 //#include "hbapiitm.h"
 //#include "hbapierr.h"
 
-
 #include "hbapi.h"
 #include "hbapiitm.h"
 #include "hbapierr.h"
@@ -14,6 +13,7 @@
 #include "hbvmpub.h"
 #include "hbinit.h"
 
+static int __counter = 0;
 static int __initialized_harbour = 0;
 
 extern HB_FUNC(DELETE_REC_SERVER_AND_DBF);
@@ -21,6 +21,7 @@ extern HB_FUNC(DELETE_REC_SERVER_AND_DBF);
 
 extern HB_FUNC(ECHO_JSON_0);
 extern HB_FUNC(ECHO_JSON);
+extern HB_FUNC(EVAL_JSON);
 extern HB_FUNC(HB_GT_STD);
 
 // --------------------------------------------------
@@ -76,6 +77,8 @@ HB_FUNC_EXTERN( MSGBEEP );
 HB_FUNC_EXTERN( __DBGENTRY );
 //HB_FUNC_INITLINES();
 
+
+void init_symbols() {
 
 HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_F18_UTILS )
 { "USEX", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( USEX )}, NULL },
@@ -144,10 +147,12 @@ HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_F18_UTILS )
 //{ "(_INITLINES)", {HB_FS_INITEXIT | HB_FS_LOCAL}, {hb_INITLINES}, NULL },
 //HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_F18_UTILS, "../F18_knowhow/common/f18_utils.prg", 0x0, 0x0003 )
 //HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_NODE_1 )
+{ "EVAL_JSON_0", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( EVAL_JSON )}, NULL },
 { "ECHO_JSON_0", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( ECHO_JSON_0 )}, NULL },
 { "ECHO_JSON", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( ECHO_JSON )}, NULL }
 HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_NODE_1, "node_1.prg", 0x0, 0x0003 )
 
+}
 
 #if defined( HB_PRAGMA_STARTUP )
    #pragma startup hb_vm_SymbolInit_F18_UTILS
@@ -182,6 +187,77 @@ HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )
 using namespace v8;
 
 char arr[40] = "{a: 1, test:2}";
+char eval[40] = "{\"eval\": \"+\", \"args\": [1, 2]}";
+
+static inline char *TO_CHAR(Handle<Value> val) {
+
+  String::Utf8Value utf8(val->ToString());
+
+  int len = utf8.length() + 1;
+  char *str = (char *) calloc(sizeof(char), len);
+  strncpy(str, *utf8, len);
+
+  return str;
+}
+
+Handle<Value> EvalJson(const Arguments& args)
+{
+  HandleScope scope;
+  args.This();
+
+  Handle<String> args1;
+  char *chr;
+  //if (args.Length() == 1) {
+    args1 = args[0]->ToString();
+  //}
+
+  chr = TO_CHAR(args1);
+
+     //hb_stackInit();
+     //init_symbols();
+     //printf("\nbefore push nill\n");
+     //hb_vmPushNil();
+   hb_memvarsClear(HB_TRUE);
+ 
+
+  PHB_ITEM func = hb_itemPutCPtr(NULL, "eval_json");
+  PHB_ITEM p1 = hb_itemPutC(NULL, chr);
+  PHB_ITEM pResult = hb_itemDo( func, 1, p1, 0);
+
+  printf("\npreuzimam parametar iz harboura sa hb_itemGetCPtr ..\n");
+  //const char *ret = hb_itemGetCPtr(pRez);
+
+  //PHB_ITEM pResult = hb_itemNew(hb_stackReturnItem());
+
+  if (!HB_IS_STRING(pResult))
+     printf("\nrezultat nije string ?!\n");
+
+
+  const char *ret = hb_itemGetCPtr(pResult);
+  printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+  Local<String> result = String::New(ret);
+
+   // dealociraj harbour resurse
+   //hb_itemRelease(func);
+
+   hb_itemRelease(p1);
+   //hb_itemRelease(pResult);
+
+   hb_memvarsClear(HB_TRUE);
+
+   ++ __counter;
+
+   //if (__counter % 10 == 0)
+      hb_gcCollectAll(HB_TRUE);
+
+   hb_errExit();
+   hb_conRelease();
+   hb_xexit(); 
+   return scope.Close(result);
+
+
+}
+
 
 Handle<Value> Method(const Arguments& args) {
   HandleScope scope;
@@ -192,12 +268,38 @@ Handle<Value> Method2(const Arguments& args)
 {
    HandleScope scope;
 
+#if 0
 
+   PHB_ITEM p1 = hb_itemPutCPtr(NULL, eval);
+   PHB_ITEM pRez = hb_itemDoC( "eval_json", 1, p1, 0);
+   
+   const char * ret = hb_itemGetCPtr(pRez);
 
-   //PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "{a:1, test:2}");
+   printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+
+   Local<String> result = String::New("test");
+
+   // dealociraj harbour resurse
+   //hb_itemRelease(p1);
+   //hb_itemRelease(pRez);
+
+   /*
+   hb_memvarsClear(HB_TRUE);
+   hb_gcCollectAll(HB_TRUE);
+
+   hb_errExit();
+   hb_conRelease();
+   hb_xexit(); 
+*/
+
+   return scope.Close(result);
+
+#endif
+
 
 #if 1
 
+   //PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "{a:1, test:2}");
    //PHB_ITEM p1 = hb_itemPutND(NULL, 22);
    PHB_ITEM p1 = hb_itemPutCPtr(NULL, arr);
    //PHB_ITEM pRez = hb_itemDoC( "echo_json", 1, p1, 0);
@@ -207,9 +309,11 @@ Handle<Value> Method2(const Arguments& args)
    //const char * ret = NULL;
    //hb_retc(ret);
 
-   printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+   printf("\nrezultat koji je hello.cc primio je %s\n-----xxx---\n", ret);
 
-   Local<String> result = String::New("test");
+   Local<String> result = String::New(ret);
+
+   //delete(ret);
 
    // dealociraj harbour resurse
    //hb_itemMove(p1, pRez);
@@ -217,28 +321,11 @@ Handle<Value> Method2(const Arguments& args)
    hb_itemRelease(p1);
    hb_itemRelease(pRez);
 
-//   hb_itemRelease(hb_stackReturnItem());
-/*
-   hb_itemClear(hb_stackReturnItem());
-   hb_itemClear(hb_stackReturnItem());
-   hb_itemClear(hb_stackReturnItem());
-   hb_itemClear(hb_stackReturnItem());
-   hb_itemClear(hb_stackReturnItem());
-   hb_itemClear(hb_stackReturnItem());
-*/
    hb_memvarsClear(HB_TRUE);
    hb_gcCollectAll(HB_TRUE);
-   
-   /*
-   */
+
    hb_errExit();
-   //hb_clsReleaseAll();
-   //hb_vmStaticsRelease();
-   //hb_vmProc(0);
-   //hb_vmQuit();
    hb_conRelease();
-   //hb_vmReleaseLocalSymbols();
-   //hb_gcReleaseAll();
    hb_xexit(); 
 
 
@@ -266,12 +353,14 @@ Handle<Value> Method2(const Arguments& args)
 
 void init(Handle<Object> target) {
 
- 
-   if (!__initialized_harbour) {
-      hb_vmInit( HB_FALSE );
+  if (!__initialized_harbour) {
+      hb_vmInit( HB_FALSE);
       hb_vmSetDefaultGT("STD");
       __initialized_harbour = 1;
-   }
+  }
+ 
+  target->Set(String::NewSymbol("eval_json"),
+      FunctionTemplate::New(EvalJson)->GetFunction());
 
 
 
