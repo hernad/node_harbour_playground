@@ -181,6 +181,8 @@ HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )
 
 using namespace v8;
 
+char arr[40] = "{a: 1, test:2}";
+
 Handle<Value> Method(const Arguments& args) {
   HandleScope scope;
   return scope.Close(String::New("world"));
@@ -190,38 +192,89 @@ Handle<Value> Method2(const Arguments& args)
 {
    HandleScope scope;
 
-   //HB_FUNC_EXEC(HB_GT_CRS);
-   if (!__initialized_harbour) {
-      hb_vmInit(0);
-      __initialized_harbour = 1;
-   }
 
-   hb_vmSetDefaultGT("STD");
+
+   //PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "{a:1, test:2}");
+
+#if 1
 
    //PHB_ITEM p1 = hb_itemPutND(NULL, 22);
-   PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "{a:1, test:2}");
-   hb_itemDoC( "QOUT", 1, p1, 0);
+   PHB_ITEM p1 = hb_itemPutCPtr(NULL, arr);
+   //PHB_ITEM pRez = hb_itemDoC( "echo_json", 1, p1, 0);
    PHB_ITEM pRez = hb_itemDoC( "echo_json", 1, p1, 0);
+   
+   const char * ret = hb_itemGetCPtr(pRez);
+   //const char * ret = NULL;
+   //hb_retc(ret);
 
-   const char * ret;
+   printf("\nrezultat koji je hello.cc primio je %s\n", ret);
 
-   if HB_IS_STRING(pRez) {
-       ret = hb_itemGetCPtr(pRez);
-       printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+   Local<String> result = String::New("test");
 
-       Local<String> result = String::New(ret);
+   // dealociraj harbour resurse
+   //hb_itemMove(p1, pRez);
 
-       // dealociraj harbour resurse
-       hb_itemRelease(pRez);
-       hb_itemRelease(p1);
-       return scope.Close(result);
-   } else {
-       return scope.Close(String::New("nepoznat hb ret ?!"));
-   }
+   hb_itemRelease(p1);
+   hb_itemRelease(pRez);
+
+//   hb_itemRelease(hb_stackReturnItem());
+/*
+   hb_itemClear(hb_stackReturnItem());
+   hb_itemClear(hb_stackReturnItem());
+   hb_itemClear(hb_stackReturnItem());
+   hb_itemClear(hb_stackReturnItem());
+   hb_itemClear(hb_stackReturnItem());
+   hb_itemClear(hb_stackReturnItem());
+*/
+   hb_memvarsClear(HB_TRUE);
+   hb_gcCollectAll(HB_TRUE);
+   
+   /*
+   */
+   hb_errExit();
+   //hb_clsReleaseAll();
+   //hb_vmStaticsRelease();
+   //hb_vmProc(0);
+   //hb_vmQuit();
+   hb_conRelease();
+   //hb_vmReleaseLocalSymbols();
+   //hb_gcReleaseAll();
+   hb_xexit(); 
+
+
+   return scope.Close(result);
+#endif
+
+#if 0
+   
+   PHB_ITEM pRez = hb_itemDoC( "echo_json_0", 0);
+
+
+   const char * ret = hb_itemGetCPtr(pRez);
+   printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+
+   Local<String> result = String::New(ret);
+
+   // dealociraj harbour resurse
+   hb_itemRelease(pRez);
+
+   return scope.Close(result);
+#endif
+
 
 }
 
 void init(Handle<Object> target) {
+
+ 
+   if (!__initialized_harbour) {
+      hb_vmInit( HB_FALSE );
+      hb_vmSetDefaultGT("STD");
+      __initialized_harbour = 1;
+   }
+
+
+
   target->Set(String::NewSymbol("hello"),
       FunctionTemplate::New(Method)->GetFunction());
 
