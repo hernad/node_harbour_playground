@@ -14,13 +14,15 @@
 #include "hbvmpub.h"
 #include "hbinit.h"
 
-extern HB_FUNC(ECHO_JSON_0);
-extern HB_FUNC(ECHO_JSON);
-
 HB_EXTERN_BEGIN
 extern  char * s_defaultGT;
 extern  char * s_pszLinkedMain;
 HB_EXTERN_END
+
+extern HB_FUNC(ECHO_JSON_0);
+extern HB_FUNC(ECHO_JSON);
+extern HB_FUNC(HB_GT_STD);
+
 
 HB_INIT_SYMBOLS_BEGIN( hb_vm_SymbolInit_NODE_1 )
 { "ECHO_JSON_0", {HB_FS_PUBLIC | HB_FS_LOCAL}, {HB_FUNCNAME( ECHO_JSON_0 )}, NULL },
@@ -35,20 +37,17 @@ HB_INIT_SYMBOLS_EX_END( hb_vm_SymbolInit_NODE_1, "node_1.prg", 0x0, 0x0003 )
 #endif
 
 
-
-
 /*
-HB_FUNC_EXTERN( HB_GT_CRS );
+HB_FUNC_EXTERN( HB_GT_STD );
 void _hb_lnk_ForceLink_build( void )
 {
-     HB_FUNC_EXEC( HB_GT_CRS );
+     HB_FUNC_EXEC( HB_GT_STD );
 }
 
 HB_CALL_ON_STARTUP_BEGIN( hb_lnk_SetDefault_build )
-     s_defaultGT = "CRS";
+     s_defaultGT = "STD";
 HB_CALL_ON_STARTUP_END( hb_lnk_SetDefault_build )
 */
-
 
 using namespace v8;
 
@@ -63,25 +62,25 @@ Handle<Value> Method2(const Arguments& args)
 
    //HB_FUNC_EXEC(HB_GT_CRS);
    hb_vmInit(0);
+   hb_vmSetDefaultGT("STD");
 
    //PHB_ITEM p1 = hb_itemPutND(NULL, 22);
-   PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "[a:1]");
+   PHB_ITEM p1 = hb_itemPutCConst(hb_stackAllocItem(), "{a:1, test:2}");
    hb_itemDoC( "QOUT", 1, p1, 0);
-   //PHB_ITEM pRez = hb_itemDoC( "echo_json_0", 0, 0);
-   //PHB_ITEM pRez = hb_itemDoC( "echo_json_0", 0);
    PHB_ITEM pRez = hb_itemDoC( "echo_json", 1, p1, 0);
 
    const char * ret;
 
    if HB_IS_STRING(pRez) {
        ret = hb_itemGetCPtr(pRez);
-       printf("rezultat koji je hello.cc primio je %s\n", ret);
-       String str = String::New(ret);
+       printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+
+       Local<String> result = String::New(ret);
 
        // dealociraj harbour resurse
        hb_itemRelease(pRez);
        hb_itemRelease(p1);
-       return scope.Close(str);
+       return scope.Close(result);
    } else {
        return scope.Close(String::New("nepoznat hb ret ?!"));
    }
