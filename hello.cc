@@ -248,7 +248,7 @@ Handle<Value> EvalJson(const Arguments& args)
    //++ __counter;
 
    //if (__counter % 10 == 0)
-   hb_gcCollectAll(HB_TRUE);
+   //hb_gcCollectAll(HB_TRUE);
 
    //hb_errExit();
    //hb_conRelease();
