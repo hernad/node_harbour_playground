@@ -16,13 +16,17 @@
 static int __counter = 0;
 static int __initialized_harbour = 0;
 
+HB_FUNC_EXTERN(EVAL_JSON);
+HB_FUNC_EXTERN(ECHO_JSON_0);
+HB_FUNC_EXTERN(ECHO_JSON);
+/*
 extern HB_FUNC(DELETE_REC_SERVER_AND_DBF);
 // -------------------------
 
-extern HB_FUNC(ECHO_JSON_0);
 extern HB_FUNC(ECHO_JSON);
 extern HB_FUNC(EVAL_JSON);
 extern HB_FUNC(HB_GT_STD);
+*/
 
 // --------------------------------------------------
 

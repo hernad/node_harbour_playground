@@ -1,7 +1,7 @@
 {
 
  'conditions': [
-    ['OS!="win"', {
+    ['OS=="linux"', {
       'variables': {
         'HB_Root%': '/opt/knowhowERP/hbout',
         'GTK_Root%': 'C:/GTK',  # Set the location of GTK all-in-one bundle
@@ -18,7 +18,7 @@
       "target_name": "hello",
       "sources": [ "hello.cc" ],
       'conditions': [
-        ['OS!="win"', {
+        ['OS=="linux"', {
           'libraries': [
             '-L<(HB_Root)/lib/harbour',
             '-lharbour',

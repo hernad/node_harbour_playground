@@ -1,12 +1,16 @@
 #!/bin/bash
 
-CUR_DIR=`pwd`
-cd ../harbour
-source set_envars_mac.sh
-cd $CUR_DIR
+source common.sh
+source config.sh
 
-HB_LIB=/opt/knowhowERP/hbout/lib/harbour/
-hbmk2 node
-cp -av libnode.a $HB_LIB
+if [ $linux -eq 0 ]; then
+  CUR_DIR=`pwd`
+  cd ../harbour
+  source set_envars_mac.sh
+  cd $CUR_DIR
+fi
+
+bmk2 node
+cp -av libnode.a $HB_LIB/
 
 
