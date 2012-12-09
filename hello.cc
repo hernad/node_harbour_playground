@@ -140,13 +140,10 @@ Handle<Value> EvalJson(const Arguments& args)
   PHB_ITEM p1 = hb_itemPutC(NULL, chr);
   PHB_ITEM pResult = hb_itemDo( func, 1, p1, 0);
 
-  printf("\npreuzimam parametar iz harboura sa hb_itemGetCPtr ..\n");
-
   if (!HB_IS_STRING(pResult))
      printf("\nrezultat nije string ?!\n");
 
   const char *ret = hb_itemGetCPtr(pResult);
-  printf("\nrezultat koji je hello.cc primio je %s\n", ret);
   Local<String> result = String::New(ret);
 
   //hb_itemRelease(p1);
