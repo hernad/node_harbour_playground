@@ -10,7 +10,7 @@ if [ $linux -eq 0 ]; then
   cd $CUR_DIR
 fi
 
-bmk2 node
+hbmk2 node
 cp -av libnode.a $HB_LIB/
 
 

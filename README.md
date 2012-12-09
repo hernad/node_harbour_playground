@@ -16,6 +16,11 @@
     hbmk2 node
     cp libnode.a $HB_LIB
 
+## usage
+
+    export LD_LIBRARY_PATH=$HB_LIB:.
+    node hello.js
+
 ## Reference
  
  - http://redmine.bring.out.ba/projects/harbour-b-out-ba/wiki/HarbourRunFromRuby
