@@ -9,7 +9,7 @@ var rezultat = JSON.parse(rezultat_string);
 console.log("addon vration json string: " + rezultat_string + " evo server_version vrijednosti: " + rezultat.server_version);
 
 
-process.exit(code=0);
+//process.exit(code=0);
 
 console.log("------------------- idemo dalje ----------");
 
