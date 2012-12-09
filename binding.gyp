@@ -16,7 +16,7 @@
   "targets": [
     {
       "target_name": "hello",
-      "sources": [ "hello.cc", "node_0.c" ],
+      "sources": [ "hello.cc", "node_1.c" ],
       'conditions': [
 
         [ 'OS=="linux"',{

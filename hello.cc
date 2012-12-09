@@ -138,7 +138,7 @@ Handle<Value> EchoJson(const Arguments& args)
 
   PHB_ITEM p1 = hb_itemPutC(NULL, chr);
   PHB_ITEM func = hb_itemPutCPtr(NULL, "echo_json");
-  p1 = hb_itemPutC(NULL, chr); 
+  p1 = hb_itemPutCPtr(NULL, chr); 
   PHB_ITEM pResult = hb_itemDo( func, 1, p1, 0);
 
   printf("\npreuzimam parametar iz harboura sa hb_itemGetCPtr ..\n");
@@ -171,9 +171,7 @@ void init(Handle<Object> target) {
 
   if (!__initialized_harbour) {
 
-      //printf("point vminit 1\n");
       hb_vmInit( HB_FALSE);
-      //printf("point std 2\n");
       //hb_vmSetDefaultGT("STD");
 
       hb_itemDoC( "init_harbour_hello_node", 0, 0);

@@ -1,4 +1,3 @@
-
 procedure echo_json_0()
 local _ret
 
@@ -34,7 +33,6 @@ _ret := "[ " + _ret + " ]"
 ? pp(_ret)
 ? "------------------------------------------"
 return  _ret
-
 
 function eval_json(json) 
 local _var, _json_len
@@ -114,8 +112,6 @@ return hb_jsonEncode(_ret)
 procedure main()
 ? "dummy main"
 return
-
-
 
 // ----------------------------------------------------
 // ----------------------------------------------------
