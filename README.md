@@ -28,6 +28,9 @@
 
 ## bench
 
-
+## mac
    - 300 000 83minute, 92 MB RAM
    - 300 000 2 minute, 110 MB RAM bez hb_gc .... !
+
+## linux
+    - 300 000 5m26sec, 65 MB RAM bez hb_gc
