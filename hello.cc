@@ -123,6 +123,44 @@ static inline char *TO_CHAR(Handle<Value> val) {
   return str;
 }
 
+Handle<Value> EvalJson(const Arguments& args)
+{
+  HandleScope scope;
+  args.This();
+
+  Handle<String> args1;
+  char *chr;
+    args1 = args[0]->ToString();
+
+  chr = TO_CHAR(args1);
+
+  hb_memvarsClear(HB_TRUE);
+
+  PHB_ITEM func = hb_itemPutCPtr(NULL, "eval_json");
+  PHB_ITEM p1 = hb_itemPutC(NULL, chr);
+  PHB_ITEM pResult = hb_itemDo( func, 1, p1, 0);
+
+  printf("\npreuzimam parametar iz harboura sa hb_itemGetCPtr ..\n");
+
+  if (!HB_IS_STRING(pResult))
+     printf("\nrezultat nije string ?!\n");
+
+  const char *ret = hb_itemGetCPtr(pResult);
+  printf("\nrezultat koji je hello.cc primio je %s\n", ret);
+  Local<String> result = String::New(ret);
+
+  //hb_itemRelease(p1);
+  hb_itemRelease(pResult);
+
+  hb_memvarsClear(HB_TRUE);
+
+ 
+  return scope.Close(result);
+
+
+}
+
+
 Handle<Value> EchoJson(const Arguments& args)
 {
   HandleScope scope;
@@ -138,7 +176,6 @@ Handle<Value> EchoJson(const Arguments& args)
 
   PHB_ITEM p1 = hb_itemPutC(NULL, chr);
   PHB_ITEM func = hb_itemPutCPtr(NULL, "echo_json");
-  p1 = hb_itemPutCPtr(NULL, chr); 
   PHB_ITEM pResult = hb_itemDo( func, 1, p1, 0);
 
   printf("\npreuzimam parametar iz harboura sa hb_itemGetCPtr ..\n");
@@ -179,6 +216,10 @@ void init(Handle<Object> target) {
       __initialized_harbour = 1;
   }
  
+  target->Set(String::NewSymbol("eval_json"),
+     FunctionTemplate::New(EvalJson)->GetFunction());
+
+
   target->Set(String::NewSymbol("echo_json"),
      FunctionTemplate::New(EchoJson)->GetFunction());
 

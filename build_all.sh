@@ -2,7 +2,7 @@
 
 source common.sh
 
-HB_MODULE=node_0
+HB_MODULE=node
 
 source config.sh
 
@@ -45,5 +45,5 @@ touch hello.cc
 node-gyp build V=1
 
 
-ls -l  build/Release/hello.node
-ls -l  lib$HB_MODULE.a
+ls -l -h  build/Release/hello.node
+ls -l -h  lib$HB_MODULE.a
