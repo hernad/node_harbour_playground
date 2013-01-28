@@ -7,7 +7,7 @@ console.log("start");
 
 console.log(addon.hello());
 console.log("prije json");
-console.log(addon.echo_json("test"));
+//console.log(addon.echo_json("test"));
 
 console.log("kraj");
 
